@@ -117,6 +117,39 @@ resource "aws_lambda_function_url" "endpoint" {
   # }
 }
 
+resource "aws_iam_policy" "service_callers" {
+  for_each = var.suga.services
+
+  name = "${local.lambda_name}-caller-${each.key}"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = "lambda:InvokeFunctionUrl"
+        Resource = aws_lambda_function_url.endpoint.function_arn
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "service_callers" {
+  for_each = var.suga.services
+
+  role       = each.value.identities["aws:iam:role"].exports["aws_iam_role:name"]
+  policy_arn = aws_iam_policy.service_callers[each.key].arn
+}
+
+resource "aws_lambda_permission" "service_invokers" {
+  for_each = var.suga.services
+
+  statement_id  = "AllowInvokeFrom${replace(each.key, "-", "")}"
+  action        = "lambda:InvokeFunctionUrl"
+  function_name = aws_lambda_function.function.function_name
+  principal     = each.value.identities["aws:iam:role"].exports["aws_iam_role:arn"]
+}
+
 # Create role and policy to allow schedule to invoke lambda
 resource "aws_iam_role" "role" {
   assume_role_policy = jsonencode({

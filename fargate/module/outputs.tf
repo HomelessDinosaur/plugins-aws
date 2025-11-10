@@ -1,7 +1,8 @@
 output "suga" {
   value = {
-    id          = aws_ecs_service.service.id
-    domain_name = data.aws_lb.alb.dns_name
+    id            = aws_ecs_service.service.id
+    domain_name   = data.aws_lb.alb.dns_name
+    http_endpoint = "http://${data.aws_lb.alb.dns_name}/${var.suga.name}"
     exports = {
       resources = {
         "aws_lb" = var.alb_arn

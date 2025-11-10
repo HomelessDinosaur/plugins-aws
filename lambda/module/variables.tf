@@ -11,6 +11,12 @@ variable "suga" {
     identities = map(object({
       exports = map(string)
     }))
+    services = optional(map(object({
+      actions = list(string)
+      identities = map(object({
+        exports = map(string)
+      }))
+    })), {})
   })
 }
 

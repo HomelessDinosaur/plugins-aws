@@ -38,4 +38,7 @@ inputs:
     type: list(string)
     description: 'Security group IDs controlling network access when Lambda runs in VPC. Must be used with subnet_ids - both provided for VPC deployment or both empty for internet-only Lambda. Configure outbound rules for database, API, or service access (e.g. `["sg-lambda-rds", "sg-lambda-redis"]`)'
 
-outputs: {}
+outputs:
+  http_endpoint:
+    type: string
+    description: "HTTP endpoint URL for service-to-service communication"

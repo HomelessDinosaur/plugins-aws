@@ -221,5 +221,17 @@ resource "aws_lb_listener_rule" "service" {
   }
 }
 
+resource "aws_security_group_rule" "service_ingress_from_alb" {
+  count = length(var.suga.services) > 0 && var.alb_security_group != null ? 1 : 0
+
+  type              = "ingress"
+  from_port         = 80
+  to_port           = 80
+  protocol          = "tcp"
+  security_group_id = var.alb_security_group
+  self              = true
+  description       = "Allow service-to-service communication via ALB for ${var.suga.name}"
+}
+
 
 

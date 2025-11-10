@@ -5,6 +5,12 @@ variable "suga" {
     image_id   = string
     env        = map(string)
     identities = map(any)
+    services = optional(map(object({
+      actions = list(string)
+      identities = map(object({
+        exports = map(string)
+      }))
+    })), {})
   })
 }
 

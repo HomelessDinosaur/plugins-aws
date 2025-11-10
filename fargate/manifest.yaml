@@ -31,4 +31,7 @@ inputs:
   security_groups:
     type: list(string)
 
-outputs: {}
+outputs:
+  http_endpoint:
+    type: string
+    description: "HTTP endpoint URL for service-to-service communication"
